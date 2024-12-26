@@ -1,9 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+
 
 class GarageBase(BaseModel):
     name: str
     city: str
+    location: str
     capacity: int
 
 class GarageCreate(GarageBase):
@@ -18,22 +20,31 @@ class Garage(GarageBase):
 class GarageUpdate(BaseModel):
     name: str | None = None
     city: str | None = None
+    location: str | None = None
     capacity: int | None = None
 
 class CarBase(BaseModel):
     make: str
     model: str
-    year: int
-    garage_id: Optional[int]
+    productionYear: int
+    licensePlate: str
+
 
 class CarCreate(CarBase):
-    pass
+    garageIds: List[int] = []
+
+class CarUpdate(BaseModel):
+    make: str | None = None
+    model: str | None = None
+    year: str | None = None
+    garage_id: Optional[int] | None = None
 
 class Car(CarBase):
     id: int
+    garages: List[Garage] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class MaintenanceBase(BaseModel):
     date: str

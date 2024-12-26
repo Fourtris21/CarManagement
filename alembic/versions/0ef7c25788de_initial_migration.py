@@ -1,8 +1,8 @@
 """Initial migration
 
-Revision ID: b9ff039bb94f
+Revision ID: 0ef7c25788de
 Revises: 
-Create Date: 2024-12-23 23:43:37.299343
+Create Date: 2024-12-26 01:52:36.651830
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'b9ff039bb94f'
+revision: str = '0ef7c25788de'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,24 +24,29 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('city', sa.String(), nullable=True),
+    sa.Column('location', sa.String(), nullable=True),
     sa.Column('capacity', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_garages_city'), 'garages', ['city'], unique=False)
     op.create_index(op.f('ix_garages_id'), 'garages', ['id'], unique=False)
+    op.create_index(op.f('ix_garages_location'), 'garages', ['location'], unique=False)
     op.create_index(op.f('ix_garages_name'), 'garages', ['name'], unique=False)
     op.create_table('cars',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('make', sa.String(), nullable=True),
     sa.Column('model', sa.String(), nullable=True),
-    sa.Column('year', sa.Integer(), nullable=True),
-    sa.Column('garage_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['garage_id'], ['garages.id'], ),
+    sa.Column('productionYear', sa.Integer(), nullable=True),
+    sa.Column('licensePlate', sa.String(), nullable=True),
+    sa.Column('garageIds', sa.PickleType(), nullable=True),
+    sa.ForeignKeyConstraint(['garageIds'], ['garages.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_cars_id'), 'cars', ['id'], unique=False)
+    op.create_index(op.f('ix_cars_licensePlate'), 'cars', ['licensePlate'], unique=False)
     op.create_index(op.f('ix_cars_make'), 'cars', ['make'], unique=False)
     op.create_index(op.f('ix_cars_model'), 'cars', ['model'], unique=False)
+    op.create_index(op.f('ix_cars_productionYear'), 'cars', ['productionYear'], unique=False)
     op.create_table('maintenances',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=True),
@@ -61,11 +66,14 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_maintenances_id'), table_name='maintenances')
     op.drop_index(op.f('ix_maintenances_date'), table_name='maintenances')
     op.drop_table('maintenances')
+    op.drop_index(op.f('ix_cars_productionYear'), table_name='cars')
     op.drop_index(op.f('ix_cars_model'), table_name='cars')
     op.drop_index(op.f('ix_cars_make'), table_name='cars')
+    op.drop_index(op.f('ix_cars_licensePlate'), table_name='cars')
     op.drop_index(op.f('ix_cars_id'), table_name='cars')
     op.drop_table('cars')
     op.drop_index(op.f('ix_garages_name'), table_name='garages')
+    op.drop_index(op.f('ix_garages_location'), table_name='garages')
     op.drop_index(op.f('ix_garages_id'), table_name='garages')
     op.drop_index(op.f('ix_garages_city'), table_name='garages')
     op.drop_table('garages')

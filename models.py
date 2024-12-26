@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, PickleType
+from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -7,6 +8,7 @@ class Garage(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     city = Column(String, index=True)
+    location = Column(String, index=True)
     capacity = Column(Integer)
 
 class Car(Base):
@@ -14,8 +16,9 @@ class Car(Base):
     id = Column(Integer, primary_key=True, index=True)
     make = Column(String, index=True)
     model = Column(String, index=True)
-    year = Column(Integer)
-    garage_id = Column(Integer, ForeignKey("garages.id"))
+    productionYear = Column(Integer, index=True)
+    licensePlate = Column(String, index=True)
+    garageIds = Column(MutableList.as_mutable(PickleType), ForeignKey("garages.id"), default=[])
     garage = relationship("Garage")
 
 class Maintenance(Base):

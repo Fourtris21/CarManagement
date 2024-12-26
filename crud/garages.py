@@ -5,7 +5,7 @@ import models, schemas
 def get_garages(db: Session):
     return db.query(models.Garage).all()
 
-def create_garage(db: Session, garage: schemas.GarageCreate):
+def create_garage(db: Session, garage: schemas.Garage):
     db_garage = models.Garage(**garage.dict())
     db.add(db_garage)
     db.commit()
