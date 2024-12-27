@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
 
 import schemas
-from routers import garages, cars
+from routers import garages, cars, maintenances
 
 app = FastAPI()
 
@@ -17,6 +17,7 @@ app.add_middleware(
 
 app.include_router(garages.router, prefix="/garages", tags=["Garages"])
 app.include_router(cars.router, prefix="/cars", tags=["Cars"])
+app.include_router(maintenances.router, prefix="/maintenance", tags=["Maintenance"])
 
 
 

@@ -47,15 +47,25 @@ class Car(CarBase):
         from_attributes = True
 
 class MaintenanceBase(BaseModel):
-    date: str
-    car_id: int
-    garage_id: int
+    scheduledDate: str
+    serviceType: str
+    carId: int
+    garageId: int
 
 class MaintenanceCreate(MaintenanceBase):
     pass
 
+class MaintenanceUpdate(BaseModel):
+    scheduledDate: str | None = None
+    serviceType: str | None = None
+    carId: int | None = None
+    garageId: int | None = None
+
+class MonthlyRequestsReport(BaseModel):
+    yearMonth: str
+    requests: int
 class Maintenance(MaintenanceBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

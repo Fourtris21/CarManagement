@@ -24,6 +24,7 @@ class Car(Base):
 class Maintenance(Base):
     __tablename__ = "maintenances"
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(Date, index=True)
-    car_id = Column(Integer, ForeignKey("cars.id"))
-    garage_id = Column(Integer, ForeignKey("garages.id"))
+    scheduledDate = Column(String, index=True)
+    serviceType = Column(String, index=True)
+    carId = Column(Integer, ForeignKey("cars.id"))
+    garageId = Column(Integer, ForeignKey("garages.id"))
