@@ -5,6 +5,25 @@ import models, schemas
 def get_cars(db: Session):
     return db.query(models.Car).all()
 
+def get_cars_filter(db: Session, carMake: str = None, garageId: int = None, fromYear: int = None, toYear: int = None):
+    query = db.query(models.Car)
+
+    if carMake:
+        query = query.filter(models.Car.make == carMake)
+    if garageId:
+        query = query.join(models.Car.garages).filter(models.Garage.id == garageId)
+    if fromYear:
+        query = query.filter(models.Car.productionYear >= fromYear)
+    if toYear:
+        query = query.filter(models.Car.productionYear <= toYear)
+
+    cars = query.all()
+
+    for car in cars:
+        car.garages = db.query(models.Garage).filter(models.Garage.id.in_(car.garageIds)).all()
+
+    return cars
+
 def create_car(db: Session, car: schemas.CarCreate):
     db_car = models.Car(**car.dict())
     db.add(db_car)

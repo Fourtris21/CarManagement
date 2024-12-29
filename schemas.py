@@ -31,7 +31,7 @@ class CarBase(BaseModel):
 
 
 class CarCreate(CarBase):
-    garageIds: List[int] = []
+    garageIds: list[int]
 
 class CarUpdate(BaseModel):
     make: str | None = None

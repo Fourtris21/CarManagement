@@ -15,8 +15,9 @@ def get_db():
         db.close()
 
 @router.get("/", response_model=list[schemas.Car])
-def read_garages(db: Session = Depends(get_db)):
-    return cars.get_cars(db)
+def read_cars_filter(carMake: str = None, garageId: int = None, fromYear: int = None, toYear: int = None, db: Session = Depends(get_db)):
+    cars_all = cars.get_cars_filter(db, carMake, garageId, fromYear, toYear)
+    return cars_all
 
 @router.post("/", response_model=schemas.Car)
 def create_car(car: schemas.CarCreate, db: Session = Depends(get_db)):
@@ -25,6 +26,7 @@ def create_car(car: schemas.CarCreate, db: Session = Depends(get_db)):
         model=car.model,
         productionYear=car.productionYear,
         licensePlate=car.licensePlate,
+        garageIds=car.garageIds
     )
     if car.garageIds:
         db_car.garages = db.query(Garage).filter(Garage.id.in_(car.garageIds)).all()
