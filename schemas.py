@@ -37,7 +37,7 @@ class CarUpdate(BaseModel):
     make: str | None = None
     model: str | None = None
     year: str | None = None
-    garage_id: Optional[int] | None = None
+    garageIds: list[int] | None = None
 
 class Car(CarBase):
     id: int

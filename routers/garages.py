@@ -14,8 +14,8 @@ def get_db():
         db.close()
 
 @router.get("/", response_model=list[schemas.Garage])
-def read_garages(db: Session = Depends(get_db)):
-    return garages.get_garages(db)
+def read_garages(city: str = None, db: Session = Depends(get_db)):
+    return garages.get_garages(db, city)
 
 @router.post("/", response_model=schemas.Garage)
 def create_garage(garage: schemas.GarageCreate, db: Session = Depends(get_db)):

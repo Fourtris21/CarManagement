@@ -2,8 +2,13 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 import models, schemas
 
-def get_garages(db: Session):
-    return db.query(models.Garage).all()
+def get_garages(db: Session, city: str = None):
+    query = db.query(models.Garage)
+
+    if city:
+        query = query.filter(models.Garage.city == city)
+
+    return query.all()
 
 def create_garage(db: Session, garage: schemas.Garage):
     db_garage = models.Garage(**garage.dict())

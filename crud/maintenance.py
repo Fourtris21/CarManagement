@@ -35,7 +35,6 @@ def get_monthly_requests_report(
             report[year_month] = 0
         report[year_month] += 1
 
-    # Форматиране на резултата в Pydantic схеми
     return [
         schemas.MonthlyRequestsReport(yearMonth=str(year_month)[:7], requests=count)
         for year_month, count in sorted(report.items())
