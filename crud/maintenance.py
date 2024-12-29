@@ -7,8 +7,21 @@ from sqlalchemy.orm import Session
 import models, schemas
 
 
-def get_maintenance(db: Session):
-    return db.query(models.Maintenance).all()
+def get_maintenance(db: Session, carId: int = None, garageId: int = None, fromDate: str = None, toDate: str = None):
+    query = db.query(models.Maintenance)
+
+    if carId:
+        query = query.filter(models.Maintenance.carId == carId)
+    if garageId:
+        query = query.filter(models.Maintenance.garageId == garageId)
+    if fromDate:
+        from_date_obj = datetime.strptime(fromDate, "%Y-%m-%d")
+        query = query.filter(models.Maintenance.scheduledDate >= from_date_obj)
+    if toDate:
+        to_date_obj = datetime.strptime(toDate, "%Y-%m-%d")
+        query = query.filter(models.Maintenance.scheduledDate <= to_date_obj)
+
+    return query.all()
 
 def get_monthly_requests_report(
     db: Session, garage_id: int, start_date: datetime, end_date: datetime
@@ -25,8 +38,7 @@ def get_monthly_requests_report(
         )
         .all()
     )
-    # import pdb; pdb.set_trace()
-    # Генериране на репорт на база дати
+
     report = {}
     year_month = None
     for maintenance in maintenance_data:

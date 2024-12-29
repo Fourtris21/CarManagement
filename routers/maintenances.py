@@ -18,8 +18,8 @@ def get_db():
         db.close()
 
 @router.get("/", response_model=list[schemas.Maintenance])
-def read_maintenance(db: Session = Depends(get_db)):
-    return maintenance.get_maintenance(db)
+def read_maintenance(carId: int = None, garageId: int = None, fromDate: str = None, toDate: str = None, db: Session = Depends(get_db)):
+    return maintenance.get_maintenance(db, carId, garageId, fromDate, toDate)
 
 @router.get("/monthlyRequestsReport", response_model=List[schemas.MonthlyRequestsReport])
 def monthly_requests_report(
