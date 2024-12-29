@@ -17,6 +17,11 @@ class Garage(GarageBase):
     class Config:
         from_attributes = True
 
+class DailyAvailabilityReport(BaseModel):
+    date: str
+    requests: int
+    availableCapacity: int
+
 class GarageUpdate(BaseModel):
     name: str | None = None
     city: str | None = None
